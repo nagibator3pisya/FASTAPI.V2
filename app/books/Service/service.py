@@ -1,7 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
-from app.books.schemas.Schemas import AutorCreate, Book, BookCreate, AutorUpdate
+from app.books.schemas.Schemas import AutorCreate, BookCreate, AutorUpdate
 
 from app.books.model.models import Autor,Books
 
@@ -33,6 +34,11 @@ async def get_autor_by_del(autor_id:int,session:AsyncSession):
     return delet
 
 
+async def get_autor_with_books(session:AsyncSession,autor_id:int):
+    result =await session.execute(select(Autor).options(joinedload(Autor.books)).filter(Autor.id == autor_id))
+    return result.scalars().first()
+
+
 
 async def get_autor_by_update(autor_id:int,session:AsyncSession,author_data:AutorUpdate)->Autor:
     result = await session.execute(select(Autor).filter(Autor.id == autor_id))
@@ -59,7 +65,7 @@ async def create_book(db: AsyncSession, book: BookCreate):
     return db_book
 
 async def get_book(db: AsyncSession, book_id: int):
-    result = await db.execute(select(Books).filter(Book.id == book_id))
+    result = await db.execute(select(Books).filter(Books.id == book_id))
     return result.scalars().first()
 
 async def get_books(db: AsyncSession, skip: int = 0, limit: int = 100):

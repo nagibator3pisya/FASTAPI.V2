@@ -3,6 +3,12 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
+
+class User(BaseModel):
+    name:str
+    age: int
+
+
 """
 GET (получение данных) -> read
 
@@ -20,9 +26,12 @@ async def root(name:str,age:int):
 
 
 # отличие между auery параметрами и body параметрами
+'''
+добавить данные от юзера
+'''
 @app.post("/")
-async def root(name:str,age:int):
-    return {"message": f"Hello {name},age {age}"}
+async def root(user:User):
+    return {"message": f"Hello {user.name},age {user.age}"}
 
 
 if __name__ == '__main__':

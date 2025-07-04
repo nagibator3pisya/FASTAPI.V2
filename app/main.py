@@ -1,3 +1,5 @@
+from typing import Union
+
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -5,9 +7,10 @@ from pydantic import BaseModel
 app = FastAPI()
 
 class User(BaseModel):
-    name:str
-    age: int
-
+    name: str
+    description: Union[str, None] = None
+    price: float
+    tax: Union[float, None] = None
 
 """
 GET (получение данных) -> read
@@ -31,7 +34,7 @@ async def root(name:str,age:int):
 '''
 @app.post("/")
 async def root(user:User):
-    return {"message": f"Hello {user.name},age {user.age}"}
+    return user
 
 
 if __name__ == '__main__':

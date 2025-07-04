@@ -1,16 +1,22 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.books.views.views import router_autors_and_books
 
 app = FastAPI()
+"""
+GET (получение данных) -> read
 
-app.include_router(router_autors_and_books)
+POST (добавление данных) - create
+
+PUT (изменение данных) - update
+
+DELETE (удаление данных) - delete
+"""
 
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def root(name:str):
+    return {"message": f"Hello {name}"}
 
 
 if __name__ == '__main__':

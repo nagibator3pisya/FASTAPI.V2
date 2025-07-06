@@ -37,5 +37,13 @@ async def root(user:User):
     return user
 
 
+
+@app.post('/user/{user_id}')
+async def get_user(user_id:int):
+    return f'message:{user_id}'
+
+
+
+
 if __name__ == '__main__':
     uvicorn.run('main:app',reload=True)

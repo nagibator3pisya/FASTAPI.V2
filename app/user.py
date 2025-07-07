@@ -1,5 +1,7 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+
+from app.model import User, UserOut, UserIn
+
 user_router = APIRouter(prefix='/users',tags=['users'])
 
 """
@@ -12,10 +14,17 @@ PUT (изменение данных) - update
 DELETE (удаление данных) - delete
 """
 
-class User(BaseModel):
-    name:str
-    age: int
-    description: str | None
+@user_router.post('/user/',response_model=UserOut)
+async def create(user: UserIn):
+    return user
+
+
+
+
+
+
+
+
 
 
 # Получение данных

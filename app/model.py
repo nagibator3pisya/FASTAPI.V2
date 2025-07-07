@@ -1,7 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel,Field
-
+from pydantic import BaseModel, Field, EmailStr
 
 
 class Phone(BaseModel):
@@ -22,8 +21,17 @@ class User(BaseModel):
     address: Optional[list[Address]] =  None # связь с адресом
 
 
-address = Address(country='Россия',city='Москва')
-user = User(name='Саша',age=3,address=[address])
 
-print(user.model_dump())
 
+
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: Optional[str] = None
+
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: Optional[str] = None

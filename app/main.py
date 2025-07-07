@@ -1,16 +1,16 @@
 from typing import Union
 
 import uvicorn
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, APIRouter
+
+from app.user import user_router
 
 app = FastAPI()
 
-class User(BaseModel):
-    name: str
-    description: Union[str, None] = None
-    price: float
-    tax: Union[float, None] = None
+app.include_router(user_router)
+
+
+
 
 """
 GET (получение данных) -> read
@@ -21,26 +21,6 @@ PUT (изменение данных) - update
 
 DELETE (удаление данных) - delete
 """
-
-# Query-параметры http://127.0.0.1:8000/items/?skip=0&limit=10
-@app.get("/")
-async def root(name:str,age:int):
-    return {"message": f"Hello {name},age {age}"}
-
-
-# отличие между auery параметрами и body параметрами
-'''
-добавить данные от юзера
-'''
-@app.post("/")
-async def root(user:User):
-    return user
-
-
-
-@app.post('/user/{user_id}')
-async def get_user(user_id:int):
-    return f'message:{user_id}'
 
 
 

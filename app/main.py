@@ -1,9 +1,9 @@
 from typing import Union
 
 import uvicorn
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 
-from app.user import user_router
+from app.crud import user_router
 
 app = FastAPI()
 

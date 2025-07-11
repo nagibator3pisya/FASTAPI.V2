@@ -6,12 +6,17 @@ from app.schemas import TaskCreate
 from model import Task
 
 async def get_task_first(session:AsyncSession,task_id:int):
-    result = await session.execute(select(Task).filter_by(Task.id == task_id))
+    result = await session.execute(select(Task).filter(Task.id == task_id))
     return result.scalars().first()
 
-async def get_task_all(session:AsyncSession,task_id:int):
-    result = await session.execute(select(Task).filter_by(Task.id == task_id))
+async def get_task_all(session:AsyncSession):
+    result = await session.execute(select(Task).filter(Task.id))
     return result.scalars().all()
+
+
+
+
+
 
 async  def create_task(session:AsyncSession, task:TaskCreate):
     result =Task(**task.model_dump())

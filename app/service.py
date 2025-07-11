@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import schemas
-from app.schemas import TaskCreate, TaskUpdate
+from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus
 from model import Task
 
 async def get_task_first(session:AsyncSession,task_id:int):
@@ -45,3 +45,16 @@ async def delete_task(task_id: int, session: AsyncSession):
     await session.delete(task)
     await session.commit()
     return {"detail": "Задача удалена"}
+
+
+async def update_task_status(task_id: int,status: TaskUpdateStatus,session:AsyncSession):
+    result = await session.execute(select(Task).where(Task.id == task_id))
+    task =result.scalar_one_or_none()
+
+    if not task:
+        return None
+
+    task.status = status
+    await session.commit()
+    await session.refresh(task)
+    return task

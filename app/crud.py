@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import service
 from app.deps import get_db
-from app.schemas import TaskCreate, TaskUpdate
+from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus
 
 user_router = APIRouter(tags=['task'],prefix='/task')
 
@@ -40,6 +40,16 @@ async def read_task_update(task_id: int,task_data: TaskUpdate,session:AsyncSessi
 @user_router.delete("/delete/{task_id}/")
 async def delete_task(task_id: int, session: AsyncSession = Depends(get_db)):
     result = await service.delete_task(task_id=task_id, session=session)
+    if not result:
+        raise HTTPException(status_code=404, detail="Задача не найдена")
+    return result
+
+
+
+
+@user_router.patch('/{task_id}/status_update')
+async def update(task_id: int, task_data_status :TaskUpdateStatus ,session: AsyncSession = Depends(get_db) ):
+    result =await service.update_task_status(task_id=task_id,status=task_data_status.status,session=session)
     if not result:
         raise HTTPException(status_code=404, detail="Задача не найдена")
     return result

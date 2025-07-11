@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -16,3 +18,9 @@ class Task(TaskBase):
 
     class Config:
         from_orm = True
+
+
+class TaskUpdate(TaskBase):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None

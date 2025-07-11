@@ -6,11 +6,14 @@ from pydantic import BaseModel
 class TaskBase(BaseModel):
     title:str
     description:str | None
-    completed:bool | None
+    status:bool | None
 
 # Cхема для создания задачи
 class TaskCreate(TaskBase):
-    pass
+    title: str
+    description: str | None
+    status: bool = False
+
 
 # Схема для отображения задачи
 class Task(TaskBase):

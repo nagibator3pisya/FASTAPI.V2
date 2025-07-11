@@ -7,8 +7,8 @@ from config.DataBase import Base
 
 
 class Task(Base):
-    __tablename__ = 'Task'
+    __tablename__ = 'task'
 
     title:Mapped[str] = mapped_column(String(20))
     description:Mapped[str] = mapped_column(String(500))
-    completed:Mapped[str] = mapped_column(Boolean, default=False)
+    status:Mapped[str] = mapped_column(Boolean, default=False)

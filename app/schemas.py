@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -7,6 +8,7 @@ class TaskBase(BaseModel):
     title:str
     description:str | None
     status:bool | None
+    deadline:Optional[datetime] = None
 
 # Cхема для создания задачи
 class TaskCreate(TaskBase):

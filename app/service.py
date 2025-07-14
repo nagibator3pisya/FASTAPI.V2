@@ -1,9 +1,31 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from app import schemas
 from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus
-from model import Task
+from app.model import Task
+
+
+
+async def check_upcoming_deadlines(session:AsyncSession):
+    now = datetime.utcnow()
+    soon = now + timedelta(hours=1)
+
+
+    result = await session.execute(
+        select(Task).where(
+            Task.deadline != None,
+            Task.deadline <= soon,
+            Task.status == False))
+    tasks = result.scalars().all()
+    print(f"Найдено задач: {len(tasks)}", flush=True)
+
+    for task in tasks:
+        print(f"{task.id} | {task.title} | deadline: {task.deadline} | status: {task.status}", flush=True)
+
+
+
+
 
 async def get_task_first(session:AsyncSession,task_id:int):
     result = await session.execute(select(Task).filter(Task.id == task_id))

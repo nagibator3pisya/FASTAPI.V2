@@ -26,11 +26,11 @@ class Task(TaskBase):
 class TaskUpdate(TaskBase):
     title: Optional[str] = None
     description: Optional[str] = None
-    # status: Optional[str] = None
+    status: Optional[str] = None
 
 
-
-class TaskUpdateStatus(TaskBase):
+# для обновления только статуса
+class TaskUpdateStatus(BaseModel):
     status : bool
 
 

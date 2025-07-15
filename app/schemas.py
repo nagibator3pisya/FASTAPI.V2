@@ -1,7 +1,15 @@
+from enum import Enum
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
+
+class TaskPriority(str,Enum):
+    high = "high"
+    medium = "medium"
+    low = "low"
+
+
 
 
 class TaskBase(BaseModel):
@@ -11,8 +19,10 @@ class TaskBase(BaseModel):
     deadline:datetime
 
 
+
     class Config:
         from_attributes = True
+
 
 # Cхема для создания задачи
 class TaskCreate(TaskBase):
@@ -20,6 +30,7 @@ class TaskCreate(TaskBase):
     description: str | None
     status: bool = False
     deadline: datetime
+    priority: TaskPriority
 
 # Схема для отображения задачи
 class Task(TaskBase):
@@ -35,8 +46,13 @@ class TaskUpdate(TaskBase):
     status: Optional[str] = None
 
 
+
 # для обновления только статуса
 class TaskUpdateStatus(BaseModel):
     status : bool
+
+
+class TastUpdatepriority(BaseModel):
+    priority: TaskPriority
 
 

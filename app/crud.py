@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import service
 from app.deps import get_db
-from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus
+from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority
 
 user_router = APIRouter(tags=['task'],prefix='/task')
 
@@ -54,3 +54,10 @@ async def update(task_id: int, task_data_status :TaskUpdateStatus ,session: Asyn
         raise HTTPException(status_code=404, detail="Задача не найдена")
     return result
 
+
+@user_router.patch('/{task_id}/priority')
+async def update_priority(task_id: int, task_data_priority :TastUpdatepriority ,session: AsyncSession = Depends(get_db) ):
+    result =await service.update_task_status(task_id=task_id,status=task_data_priority.priority,session=session)
+    if not result:
+        raise HTTPException(status_code=404, detail="Задача не найдена")
+    return result

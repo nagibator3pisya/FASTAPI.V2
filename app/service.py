@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus
+from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority
 from app.model import Task
 
 
@@ -77,6 +77,19 @@ async def update_task_status(task_id: int,status: TaskUpdateStatus,session:Async
         return None
 
     task.status = status
+    await session.commit()
+    await session.refresh(task)
+    return task
+
+
+async def update_task_priority(task_id: int,priority: TastUpdatepriority,session:AsyncSession):
+    result = await session.execute(select(Task).where(Task.id == task_id))
+    task =result.scalar_one_or_none()
+
+    if not task:
+        return None
+
+    task.priority = priority
     await session.commit()
     await session.refresh(task)
     return task

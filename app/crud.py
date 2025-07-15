@@ -1,9 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from starlette.responses import HTMLResponse
+from fastapi import Request
 from app import service
+from app.Jinja.utils import templates
 from app.deps import get_db
+
 from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority
 
 user_router = APIRouter(tags=['task'],prefix='/task')
@@ -13,12 +16,12 @@ async def creat_task(task_id: TaskCreate,session:AsyncSession = Depends(get_db))
     return await service.create_task(session=session,task=task_id)
 
 
-@user_router.get('/{task_id}/')
-async def read_task_first(task_id:int,session:AsyncSession = Depends(get_db)):
+@user_router.get('/html/{task_id}/',response_class=HTMLResponse)
+async def read_task_first(task_id:int,request: Request,session:AsyncSession = Depends(get_db)):
     result = await service.get_task_first(session=session,task_id=task_id)
     if result is None:
         raise HTTPException(status_code=404, detail='Такой задачи нет')
-    return result
+    return templates.TemplateResponse('index.html',{'request':request,'result':result})
 
 
 @user_router.get('/all')

@@ -8,14 +8,18 @@ class TaskBase(BaseModel):
     title:str
     description:str | None
     status:bool | None
-    deadline:Optional[datetime] = None
+    deadline:datetime
+
+
+    class Config:
+        from_attributes = True
 
 # Cхема для создания задачи
 class TaskCreate(TaskBase):
     title: str
     description: str | None
     status: bool = False
-
+    deadline: datetime
 
 # Схема для отображения задачи
 class Task(TaskBase):

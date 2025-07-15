@@ -8,8 +8,8 @@ from app.model import Task
 
 
 async def check_upcoming_deadlines(session:AsyncSession):
-    now = datetime.utcnow()
-    soon = now + timedelta(hours=1)
+    now = datetime.now()
+    soon = now + timedelta(hours=2)
 
 
     result = await session.execute(
@@ -18,10 +18,10 @@ async def check_upcoming_deadlines(session:AsyncSession):
             Task.deadline <= soon,
             Task.status == False))
     tasks = result.scalars().all()
-    print(f"Найдено задач: {len(tasks)}", flush=True)
+    print(f"Найдено задач: {len(tasks)}")
 
     for task in tasks:
-        print(f"{task.id} | {task.title} | deadline: {task.deadline} | status: {task.status}", flush=True)
+        print(f"{task.id} | {task.title} | deadline: {task.deadline} | status: {task.status}")
 
 
 

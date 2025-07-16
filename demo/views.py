@@ -17,3 +17,14 @@ def demo_auth(
        'user_name':credentials.username,
        'password': credentials.password
    }
+
+
+# проверка юзера
+@routers_auts.get('/auth/')
+def demo_auth_username(
+        aut_username: str = Depends()
+):
+   return {
+       'message': F'hi {aut_username}',
+       'user_name':aut_username,
+   }

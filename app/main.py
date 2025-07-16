@@ -8,15 +8,15 @@ from app.background_tasks import reminder_worker
 from app.crud import user_router
 from demo.views import routers_auts
 
+# фон задача
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     asyncio.create_task(reminder_worker())
+#     yield
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    asyncio.create_task(reminder_worker())
-    yield
 
 
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI() #lifespan=lifespan
 app.include_router(user_router)
 app.include_router(routers_auts)
 

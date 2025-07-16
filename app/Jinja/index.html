@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Task</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Задача №{{ task.id }}{% endblock %}
+
+{% block content %}
     <h1>Задача №{{ task.id }}</h1>
     <p><strong>Название:</strong> {{ task.title }}</p>
     <p><strong>Описание:</strong> {{ task.description }}</p>
     <p><strong>Статус:</strong> {{ 'Выполнено' if task.status else 'В процессе' }}</p>
     <p><strong>Дедлайн:</strong> {{ task.deadline }}</p>
-</body>
-</html>
+{% endblock %}

@@ -1,3 +1,5 @@
+import os
 from starlette.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory='app/Jinja')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "Jinja"))

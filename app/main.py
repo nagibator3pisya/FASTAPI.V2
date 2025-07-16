@@ -1,4 +1,5 @@
 import asyncio
+
 from contextlib import asynccontextmanager
 from typing import Union
 
@@ -38,4 +39,4 @@ DELETE (удаление данных) - delete
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app',reload=True)
+    uvicorn.run("app.main:app", reload=True)

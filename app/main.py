@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from typing import Union
 import uvicorn
 from fastapi import FastAPI
-from app.background_tasks import reminder_worker
+# from app.background_tasks import reminder_worker
 from app.crud import user_router
 from demo.views import routers_auts
 

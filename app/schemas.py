@@ -55,4 +55,6 @@ class TaskUpdateStatus(BaseModel):
 class TastUpdatepriority(BaseModel):
     priority: TaskPriority
 
-
+class UserLoginSchema(BaseModel):
+    name: str
+    password: str

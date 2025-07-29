@@ -1,8 +1,9 @@
 from enum import Enum
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
 
 class TaskPriority(str,Enum):
     high = "high"
@@ -35,6 +36,8 @@ class TaskCreate(TaskBase):
 # Схема для отображения задачи
 class Task(TaskBase):
     id: int
+    priority: TaskPriority
+    owner: Optional["User"]  # ← ссылка на пользователя
 
     class Config:
         from_orm = True
@@ -55,6 +58,40 @@ class TaskUpdateStatus(BaseModel):
 class TastUpdatepriority(BaseModel):
     priority: TaskPriority
 
-class UserLoginSchema(BaseModel):
-    name: str
+
+
+
+
+
+class UserBase(BaseModel):
+    email: EmailStr
+    username: str
+
+
+class UserCreate(UserBase):
     password: str
+
+
+class User(UserBase):
+    id: int
+    is_active:bool
+    tasks: Optional[List[Task]] = []  # ← список задач
+
+
+
+    class Config:
+        from_attributes = True
+
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str]= None
+
+# Чтобы избежать циклического импорта
+Task.model_rebuild()
+User.model_rebuild()

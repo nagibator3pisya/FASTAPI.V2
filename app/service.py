@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import select,or_
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority
-from app.model import Task
-
+from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority, UserCreate
+from app.model import Task, User
 
 
 async def check_upcoming_deadlines(session:AsyncSession):
@@ -93,3 +92,14 @@ async def update_task_priority(task_id: int,priority: TastUpdatepriority,session
     await session.commit()
     await session.refresh(task)
     return task
+
+# User.email == user.email
+async def filter_user_scuses(session:AsyncSession,user: UserCreate):
+    stmt = select(User).filter(
+        or_(
+            User.email == user.email,
+            User.username == user.username
+        )
+    )
+    result = await session.execute(stmt)
+    return  result.scalars().first()

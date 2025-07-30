@@ -4,7 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import HTMLResponse
 from app import service
 from app.deps import get_db
+from app.model import User
 from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority, Task
+from demo.aut import get_current_active_user
 
 user_router = APIRouter(tags=['task'],prefix='/task')
 
@@ -13,21 +15,21 @@ user_router = APIRouter(tags=['task'],prefix='/task')
 
 
 @user_router.post('/')
-async def creat_task(task_id: TaskCreate,session:AsyncSession = Depends(get_db)):
-    return await service.create_task(session=session,task=task_id)
+async def creat_task(task_id: TaskCreate,session:AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user)):
+    return await service.create_task(session=session,task=task_id,current_user=current_user)
 
 
-@user_router.get('/{task_id}/', response_class=HTMLResponse)
-async def read_task_first(task_id: int, session: AsyncSession = Depends(get_db)):
-    result = await service.get_task_first(session=session, task_id=task_id)
+@user_router.get('/{task_id}/')
+async def read_task_first(task_id: int, session: AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user)):
+    result = await service.get_task_first(session=session, task_id=task_id,current_user=current_user)
     if result is None:
         raise HTTPException(status_code=404, detail='Такой задачи нет')
     return result
 
 
 @user_router.get('/all')
-async def read_tasks_all(session:AsyncSession = Depends(get_db)):
-    result = await service.get_task_all(session=session)
+async def read_tasks_all(session:AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user)):
+    result = await service.get_task_all(session=session,current_user=current_user)
     if result is None:
         raise HTTPException(status_code=404, detail='Нет задач')
     return result

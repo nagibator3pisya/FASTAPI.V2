@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
+from http.client import HTTPException
 
+from fastapi.params import Depends
 from sqlalchemy import select,or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas import TaskCreate, TaskUpdate, TaskUpdateStatus, TastUpdatepriority, UserCreate
 from app.model import Task, User
+from demo.aut import get_current_active_user
 
 
 async def check_upcoming_deadlines(session:AsyncSession):
@@ -26,19 +29,25 @@ async def check_upcoming_deadlines(session:AsyncSession):
 
 
 
-async def get_task_first(session:AsyncSession,task_id:int):
-    result = await session.execute(select(Task).filter(Task.id == task_id))
+async def get_task_first(session:AsyncSession,task_id:int,current_user: User = Depends(get_current_active_user)):
+
+    # result = await session.execute(select(Task).filter(Task.id == task_id))
+    # return result.scalars().first()
+    stmt = select(Task).where(Task.id == task_id, Task.owner_id == current_user.id)
+    result = await session.execute(stmt)
     return result.scalars().first()
 
-async def get_task_all(session:AsyncSession):
-    result = await session.execute(select(Task).filter(Task.id))
+
+async def get_task_all(session:AsyncSession,current_user: User = Depends(get_current_active_user)):
+    result = await session.execute(select(Task).filter(Task.owner_id == current_user.id))
     return result.scalars().all()
 
 
-async  def create_task(session:AsyncSession, task:TaskCreate):
-    result =Task(**task.model_dump())
+async  def create_task(session:AsyncSession, task:TaskCreate,current_user: User = Depends(get_current_active_user)):
+    result =Task(**task.model_dump(),owner_id= current_user.id)
     session.add(result)
     await session.commit()
+    await session.refresh(result)
     return result
 
 

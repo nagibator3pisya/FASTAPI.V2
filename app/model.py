@@ -1,7 +1,7 @@
 import datetime
 import enum
 
-from sqlalchemy import String, Boolean, DateTime, Enum
+from sqlalchemy import String, Boolean, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from config.DataBase import Base
@@ -13,7 +13,7 @@ class User(Base):
     username:Mapped[str] = mapped_column(String(20), unique=True, index=True)
     #  хэшированный пароль пользователя. Важно: мы никогда не храним пароли в открытом виде!
     #  Пароли всегда хэшируются перед сохранением в базу данных.
-    hashed_password:Mapped[str] =  mapped_column(String(20))
+    hashed_password:Mapped[str] =  mapped_column(String(128))
     is_active:Mapped[bool]= mapped_column(Boolean, default=True)
 
     task = relationship('Task',back_populates='owner',lazy='select')
@@ -34,7 +34,7 @@ class Task(Base):
     status:Mapped[str] = mapped_column(Boolean, default=False)
     deadline: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     priority: Mapped[TaskPriority] = mapped_column(Enum(TaskPriority), nullable=False, default=TaskPriority.medium)
-
+    owner_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     owner = relationship("User", back_populates="task")
 
 

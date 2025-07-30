@@ -103,3 +103,9 @@ async def filter_user_scuses(session:AsyncSession,user: UserCreate):
     )
     result = await session.execute(stmt)
     return  result.scalars().first()
+
+# поиска пользователя по username
+async def get_user_by_username(session: AsyncSession, username: str):
+    stmt = select(User).where(User.username == username)
+    result = await session.execute(stmt)
+    return result.scalars().first()

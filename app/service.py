@@ -51,8 +51,8 @@ async  def create_task(session:AsyncSession, task:TaskCreate,current_user: User 
     return result
 
 
-async def update_task(task_id: int,task_data: TaskUpdate,session:AsyncSession):
-    result = await session.execute(select(Task).where(Task.id == task_id))
+async def update_task(task_id: int,task_data: TaskUpdate,session:AsyncSession,current_user: User = Depends(get_current_active_user)):
+    result = await session.execute(select(Task).where(Task.id == task_id,Task.owner_id == current_user.id))
     task =result.scalar_one_or_none()
 
     if not task:
@@ -65,8 +65,8 @@ async def update_task(task_id: int,task_data: TaskUpdate,session:AsyncSession):
     return task
 
 
-async def delete_task(task_id: int, session: AsyncSession):
-    result = await session.execute(select(Task).where(Task.id == task_id))
+async def delete_task(task_id: int, session: AsyncSession,current_user: User = Depends(get_current_active_user)):
+    result = await session.execute(select(Task).where(Task.id == task_id,Task.owner_id == current_user.id))
     task = result.scalar_one_or_none()
 
     if not task:
@@ -77,8 +77,8 @@ async def delete_task(task_id: int, session: AsyncSession):
     return {"detail": "Задача удалена"}
 
 
-async def update_task_status(task_id: int,status: TaskUpdateStatus,session:AsyncSession):
-    result = await session.execute(select(Task).where(Task.id == task_id))
+async def update_task_status(task_id: int,status: TaskUpdateStatus,session:AsyncSession,current_user: User = Depends(get_current_active_user)):
+    result = await session.execute(select(Task).where(Task.id == task_id,Task.owner_id == current_user.id))
     task =result.scalar_one_or_none()
 
     if not task:
@@ -90,8 +90,8 @@ async def update_task_status(task_id: int,status: TaskUpdateStatus,session:Async
     return task
 
 
-async def update_task_priority(task_id: int,priority: TastUpdatepriority,session:AsyncSession):
-    result = await session.execute(select(Task).where(Task.id == task_id))
+async def update_task_priority(task_id: int,priority: TastUpdatepriority,session:AsyncSession,current_user: User = Depends(get_current_active_user)):
+    result = await session.execute(select(Task).where(Task.id == task_id,Task.owner_id == current_user.id))
     task =result.scalar_one_or_none()
 
     if not task:

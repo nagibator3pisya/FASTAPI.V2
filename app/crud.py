@@ -36,16 +36,16 @@ async def read_tasks_all(session:AsyncSession = Depends(get_db),current_user: Us
 
 
 @user_router.put('/update/{task_id}/')
-async def read_task_update(task_id: int,task_data: TaskUpdate,session:AsyncSession = Depends(get_db)):
-    update = await service.update_task(task_id=task_id,task_data=task_data,session=session)
+async def read_task_update(task_id: int,task_data: TaskUpdate,session:AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user)):
+    update = await service.update_task(task_id=task_id,task_data=task_data,session=session,current_user=current_user)
     if update is None:
         raise HTTPException(status_code=404, detail='Нет задач')
     return update
 
 
 @user_router.delete("/delete/{task_id}/")
-async def delete_task(task_id: int, session: AsyncSession = Depends(get_db)):
-    result = await service.delete_task(task_id=task_id, session=session)
+async def delete_task(task_id: int, session: AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user)):
+    result = await service.delete_task(task_id=task_id, session=session,current_user=current_user)
     if not result:
         raise HTTPException(status_code=404, detail="Задача не найдена")
     return result
@@ -54,16 +54,16 @@ async def delete_task(task_id: int, session: AsyncSession = Depends(get_db)):
 
 
 @user_router.patch('/{task_id}/status_update')
-async def update(task_id: int, task_data_status :TaskUpdateStatus ,session: AsyncSession = Depends(get_db) ):
-    result =await service.update_task_status(task_id=task_id,status=task_data_status.status,session=session)
+async def update(task_id: int, task_data_status :TaskUpdateStatus ,session: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+    result =await service.update_task_status(task_id=task_id,status=task_data_status.status,session=session,current_user=current_user)
     if not result:
         raise HTTPException(status_code=404, detail="Задача не найдена")
     return result
 
 
 @user_router.patch('/{task_id}/priority')
-async def update_priority(task_id: int, task_data_priority :TastUpdatepriority ,session: AsyncSession = Depends(get_db) ):
-    result =await service.update_task_status(task_id=task_id,status=task_data_priority.priority,session=session)
+async def update_priority(task_id: int, task_data_priority :TastUpdatepriority ,session: AsyncSession = Depends(get_db),current_user: User = Depends(get_current_active_user) ):
+    result =await service.update_task_priority(task_id=task_id,priority=task_data_priority.priority,session=session,current_user=current_user)
     if not result:
         raise HTTPException(status_code=404, detail="Задача не найдена")
     return result

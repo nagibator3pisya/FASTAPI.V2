@@ -16,7 +16,7 @@ class TaskPriority(str,Enum):
 class TaskBase(BaseModel):
     title:str
     description:str | None
-    status:bool | None
+    status: bool | None
     deadline:datetime
 
 
@@ -46,7 +46,8 @@ class Task(TaskBase):
 class TaskUpdate(TaskBase):
     title: Optional[str] = None
     description: Optional[str] = None
-    status: Optional[str] = None
+    status: bool | None
+
 
 
 
